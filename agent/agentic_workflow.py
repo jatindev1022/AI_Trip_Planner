@@ -1,21 +1,36 @@
 from utils.model_loader import ModelLoader
 from prompt_library.prompt import SYSTEM_PROMPT
 from langgraph.graph import StateGraph,MessagesState,END,START
-from langgraph.prebuilt import ToolNode,tools_conditionl
+from langgraph.prebuilt import ToolNode,tools_condition
 
 
-# from tools.weather_info_tool import WeatherInfoTool
-# from tools.place_search_tool import PlaceSearchTool
-# from tools.calculator_tool import CalculatorTool
-# from tools.currency_conversion import CurrencyTool
+from tools.weather_info_tool import WeatherInfoTool
+from tools.place_search_tool import PlaceSearchTool
+from tools.expense_calculator_tool import CalculatorTool
+from tools.currency_conversion import CurrencyConvertorTool
+
+
+
 class GraphBuilder():
-    def __init__(self):
-        self.tools=[
-            # WeatherInfoTool(),
-            # PlaceSearchTool(),
-            # CalculatorTool(),
-            # CurrencyConvertorTool()
-        ]
+    def __init__(self,model_provider='groq'):
+        self.model_loader=ModelLoader(model_provider=model_provider)
+        self.llm=ModelLoader.load_llm()
+        self.tools=[ ]
+        
+        self.weather_tools= WeatherInfoTool(),
+        self.place_search_tools= PlaceSearchTool(),
+        self.calculate_tools=CalculatorTool(),
+        self.currency_convertor_tools=CurrencyConvertorTool()
+        
+        self.tools.extend([
+            * self.weather_tools.weather_tool_list,
+            * self.place_search_tools.place_search_tool_list, 
+            * self.calculate_tools.calculator_tool_list,
+            * self.currency_convertor_tools.currency_convertor_tool_list
+        ])
+        
+        self.llm_with_tools=self.llm.bind_tools(tools=self.tools)
+       
         self.system_prompt=SYSTEM_PROMPT
     
     def  agent_function(self,state:MessagesState):
@@ -30,7 +45,7 @@ class GraphBuilder():
         graph_builder.add_node("agent",self.agent_function)
         graph_builder.add_node("tools",ToolNode(tools=self.tools))
         graph_builder.add_edge(START,"agent")
-        graph_builder.add_conditional_edges("agent",tools_conditionl)
+        graph_builder.add_conditional_edges("agent",tools_condition)
         graph_builder.add_edge("tools","agent")
         graph_builder.add_edge("agent",END)       
         self.graph=graph_builder.compile()
