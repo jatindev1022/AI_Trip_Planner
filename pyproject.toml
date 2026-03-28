@@ -16,7 +16,8 @@ dependencies = [
     "langchain_tavily",
     "langchain_groq",
     "langchain_openai",
-    "langgraph"
+    "langgraph",
+    "pandas>=2.3.3",
 ]
 
 [tool.setuptools]

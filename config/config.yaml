@@ -1,0 +1,4 @@
+llm:
+  groq:
+    provider: "groq"
+    model_name: "llama3-8b-8192"
