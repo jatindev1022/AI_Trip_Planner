@@ -136,7 +136,7 @@ with st.sidebar:
     <ul style="padding-left:16px; margin:0; line-height:2;">
       <li>FastAPI (Backend API)</li>
       <li>LangGraph (Agentic Logic)</li>
-      <li>Llama 3.1-70B via Groq</li>
+      <li>Llama 3.3-70B via Groq</li>
       <li>Docker + Render (Infra)</li>
       <li>Streamlit Cloud (Frontend)</li>
     </ul>
