@@ -1,3 +1,5 @@
+import streamlit as st
+import requests
 import os
 
 # Use the Render URL if available, otherwise default to localhost for local testing
