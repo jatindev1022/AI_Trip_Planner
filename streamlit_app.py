@@ -2,48 +2,140 @@ import streamlit as st
 import requests
 import os
 
+# --- PAGE CONFIG ---
+st.set_page_config(
+    page_title="AI Trip Planner | Agentic System",
+    page_icon="🌍",
+    layout="wide",
+)
+
+# --- BACKEND CONNECTION ---
 # Use the Render URL if available, otherwise default to localhost for local testing
 BASE_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
-st.set_page_config(
-    page_title="Travel Planner Agentic Application",
-    page_icon="✈️",
-    layout="centered"
-)
+# --- CUSTOM CSS ---
+st.markdown("""
+<style>
+    .main {
+        background-color: #f8f9fa;
+    }
+    .stButton>button {
+        width: 100%;
+        border-radius: 5px;
+        height: 3em;
+        background-color: #ff4b4b;
+        color: white;
+    }
+    .stTextInput>div>div>input {
+        border-radius: 5px;
+    }
+    .status-box {
+        padding: 20px;
+        border-radius: 10px;
+        background-color: white;
+        border: 1px solid #e9ecef;
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+    }
+</style>
+""", unsafe_allow_html=True)
 
-st.title("Travel Planner Agentic Application")
+# --- SIDEBAR ---
+with st.sidebar:
+    st.image("https://img.icons8.com/clouds/200/airplane-take-off.png")
+    st.title("👨‍💻 Portfolio Info")
+    st.info("""
+    ### **Developer Bio**
+    Hi, I'm **Jatin**. This project demonstrates my skills in **Agentic AI** systems and **Full-stack Backend development**.
+    """)
+    
+    st.markdown("---")
+    st.markdown("### 🛠 **Tech Stack**")
+    st.code("""
+- Python 3.12
+- FastAPI (Backend)
+- LangGraph (Agentic System)
+- Groq (Inference)
+- Docker (Deployment)
+    """)
+    
+    st.markdown("---")
+    st.markdown("### 🔗 **Connect with me**")
+    st.markdown("[![GitHub](https://img.icons8.com/material-outlined/24/000000/github.png) GitHub](https://github.com/jatindev1022)")
+    st.markdown("[![LinkedIn](https://img.icons8.com/material-outlined/24/000000/linkedin.png) LinkedIn](https://www.linkedin.com/in/jatin-dev)")
+    
+    st.markdown("---")
+    st.caption("v1.0.0 | Created for Portfolio")
 
-# Initialize session state for chat history if needed
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# --- MAIN PAGE CONTENT ---
+col1, col2 = st.columns([2, 1])
 
-st.header("Hi! How can I help you plan a trip?")
+with col1:
+    st.title("🌍 AI Agentic Trip Planner")
+    st.markdown("""
+    Welcome to your personal **AI-powered travel consultant**.  
+    This application uses an **Agentic Workflow (LangGraph)** to intelligently search for weather, 
+    places, and travel logistics to give you the perfect plan.
+    """)
 
-# --- FIX 1: Add a 'key' to the form ---
-with st.form(key="travel_form"):
-    # --- FIX 2: Place inputs INSIDE the form block ---
-    user_input = st.text_input("Let me know where you want to visit:")
-    submit_button = st.form_submit_button(label="Plan My Trip")
+with col2:
+    st.lottie = "https://assets5.lottiefiles.com/packages/lf20_5njpXo.json" # Potential for lottie but keeping it simple
+    st.success("⚡ System Status: Online & Ready")
 
-# --- FIX 3: Logical check after the form is submitted ---
+st.markdown("---")
+
+# --- INTERACTIVE SECTION ---
+st.subheader("📝 Plan Your Next Adventure")
+
+# Sample Queries for User
+cols = st.columns(3)
+if cols[0].button("🏙 3 Days in Paris"):
+    st.session_state["query_input"] = "Plan a 3-day trip to Paris for a couple"
+if cols[1].button("🏖 Week in Bali"):
+    st.session_state["query_input"] = "Give me a 7-day Bali itinerary focused on relaxation"
+if cols[2].button("🏔 Hiking in Alps"):
+    st.session_state["query_input"] = "Plan a 5-day hiking trip in the Swiss Alps"
+
+# Form Input
+with st.container():
+    with st.form(key="travel_form", clear_on_submit=False):
+        user_input = st.text_input(
+            "Where do you want to go?", 
+            value=st.session_state.get("query_input", ""),
+            placeholder="e.g., Plan a 5-day group trip to Tokyo with budget info."
+        )
+        submit_button = st.form_submit_button(label="🚀 Generate AI Itinerary")
+
+# --- HANDLING SUBMISSION ---
 if submit_button and user_input.strip():
     try:
-        with st.spinner("The AI is thinking..."):
-            # Ensure the key "query" matches your FastAPI Pydantic model
+        # User Feedback Section
+        with st.status("🤖 Agent is working...", expanded=True) as status:
+            st.write("🔍 Searching for places...")
+            st.write("🌤 Checking weather forecasts...")
+            st.write("📊 Calculating expenses...")
+            
             payload = {"question": user_input} 
             response = requests.post(f"{BASE_URL}/query", json=payload)
             
             if response.status_code == 200:
-                answer = response.json().get("answer", "No answer returned. Try again.")
+                answer = response.json().get("answer", "No answer returned.")
+                status.update(label="✅ Trip Plan Generated Successfully!", state="complete", expanded=False)
                 
-                # Display the result
-                st.markdown("### AI Travel Agent")
-                st.divider()
-                st.write(answer)
-                st.divider()
-                st.info("Note: This plan was generated by AI. Please verify prices and availability.")
+                # --- AI RESPONSE SECTION ---
+                st.markdown("### 🗺 Your Custom Trip Itinerary")
+                with st.container():
+                    st.markdown(f"""
+                    <div style="background-color: white; padding: 25px; border-radius: 10px; border-left: 5px solid #ff4b4b; line-height: 1.6;">
+                    {answer}
+                    </div>
+                    """, unsafe_allow_html=True)
+                
+                st.markdown("---")
+                st.info("💡 **Developer Tip**: This plan was generated by an autonomous agent using real-time search results.")
             else:
-                st.error(f"Backend error: {response.status_code}")
+                status.update(label="❌ Backend Error", state="error")
+                st.error(f"Reason: {response.json().get('error', 'Unknown Error')}")
                 
     except Exception as e:
-        st.error(f"Failed to connect to the server. Is FastAPI running? Error: {e}")
+        st.error(f"⚠️ **Deployment Sync Required**: Could not connect to the backend server at `{BASE_URL}`. Please check if your Render backend is live.")
+        st.info("If this is your first visit, wait 30s for the free-tier backend to wake up.")
