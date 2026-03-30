@@ -1,7 +1,7 @@
-import streamlit as st
-import requests
+import os
 
-BASE_URL = 'http://localhost:8000'  # Your FastAPI backend
+# Use the Render URL if available, otherwise default to localhost for local testing
+BASE_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
 st.set_page_config(
     page_title="Travel Planner Agentic Application",
