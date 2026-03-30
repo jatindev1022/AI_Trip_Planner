@@ -10,196 +10,159 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- BACKEND CONNECTION ---
 BASE_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 
-# --- MASTER CSS OVERRIDE ---
-# This forces a clean, light professional theme regardless of system dark mode settings.
+# --- GLOBAL CSS ---
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-/* ========== GLOBAL RESET ========== */
-html, body, [data-testid="stAppViewContainer"], .main, .block-container {
-    font-family: 'Inter', sans-serif !important;
-    background-color: #FAFAFA !important;
-    color: #111827 !important;
+/* Force Light Theme */
+:root {
+    --background: #ffffff;
+    --surface: #f9fafb;
+    --border: #e5e7eb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --accent: #2563eb;
+    --accent-light: #eff6ff;
 }
 
-/* ========== SIDEBAR ========== */
+html, body, [data-testid="stAppViewContainer"] {
+    background-color: var(--background) !important;
+    font-family: 'Inter', sans-serif !important;
+    color: var(--text-primary) !important;
+}
+.main .block-container {
+    background-color: var(--background) !important;
+    padding-top: 2.5rem !important;
+    padding-bottom: 3rem !important;
+    max-width: 800px !important;
+}
+
+/* Sidebar */
 [data-testid="stSidebar"] {
-    background-color: #FFFFFF !important;
-    border-right: 1px solid #E5E7EB !important;
+    background-color: #FAFAFA !important;
+    border-right: 1px solid var(--border) !important;
 }
 [data-testid="stSidebar"] * {
-    color: #374151 !important;
-}
-.sidebar-logo {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: #111827 !important;
-    letter-spacing: -0.5px;
-}
-.sidebar-tagline {
-    font-size: 0.75rem;
-    color: #9CA3AF !important;
-    margin-top: 4px;
-}
-.sidebar-section-title {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #9CA3AF !important;
-    margin: 16px 0 8px 0;
-}
-.tech-pill {
-    display: inline-block;
-    background-color: #F3F4F6;
-    color: #374151 !important;
-    border: 1px solid #E5E7EB;
-    border-radius: 20px;
-    padding: 3px 10px;
-    font-size: 0.73rem;
-    margin: 3px 2px;
+    color: var(--text-primary) !important;
 }
 
-/* ========== MAIN CONTENT ========== */
-.hero-badge {
-    display: inline-block;
-    background-color: #EFF6FF;
-    color: #2563EB;
-    border-radius: 20px;
-    padding: 4px 12px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    margin-bottom: 12px;
-    border: 1px solid #BFDBFE;
-}
-.hero-title {
-    font-size: 2.2rem;
-    font-weight: 700;
-    color: #111827;
-    letter-spacing: -0.03em;
-    line-height: 1.2;
-    margin: 0 0 8px 0;
-}
-.hero-subtitle {
-    font-size: 1rem;
-    color: #6B7280;
-    font-weight: 400;
-    margin: 0 0 24px 0;
-    line-height: 1.5;
-}
-.divider {
-    border: none;
-    border-top: 1px solid #F3F4F6;
-    margin: 24px 0;
-}
-
-/* ========== SEARCH FORM ========== */
-.suggestion-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: #6B7280;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-}
-.stTextInput > div > div > input {
-    background-color: #FFFFFF !important;
-    border: 1.5px solid #E5E7EB !important;
-    border-radius: 10px !important;
-    color: #111827 !important;
-    font-size: 0.95rem !important;
-    padding: 12px 16px !important;
-    font-family: 'Inter', sans-serif !important;
-}
-.stTextInput > div > div > input:focus {
-    border-color: #2563EB !important;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
-}
-.stTextInput > div > div > input::placeholder {
-    color: #9CA3AF !important;
-}
-
-/* ========== BUTTONS ========== */
-.stButton > button {
+/* All buttons - default style (Generate Itinerary) */
+div.stButton > button {
     background-color: #111827 !important;
-    color: #FFFFFF !important;
-    border: none !important;
+    color: #ffffff !important;
+    border: 1.5px solid #111827 !important;
     border-radius: 8px !important;
     font-family: 'Inter', sans-serif !important;
-    font-size: 0.85rem !important;
     font-weight: 500 !important;
-    padding: 10px 18px !important;
-    transition: all 0.15s ease !important;
-    letter-spacing: 0.01em;
+    font-size: 0.875rem !important;
+    padding: 0.55rem 1.25rem !important;
+    transition: background-color 0.15s, border-color 0.15s !important;
+    width: 100%;
 }
-.stButton > button:hover {
-    background-color: #1F2937 !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+div.stButton > button:hover {
+    background-color: #1f2937 !important;
+    border-color: #1f2937 !important;
 }
 
-/* Quick Select Chips */
-.chip-btn > button {
-    background-color: #FFFFFF !important;
+/* Chip buttons override (uses a container class to target them specifically) */
+.chip-wrp div.stButton > button {
+    background-color: #ffffff !important;
     color: #374151 !important;
-    border: 1.5px solid #E5E7EB !important;
+    border: 1.5px solid #d1d5db !important;
+    border-radius: 100px !important;
     font-size: 0.8rem !important;
     font-weight: 400 !important;
-    border-radius: 20px !important;
-    padding: 6px 14px !important;
+    padding: 0.35rem 1rem !important;
+    width: auto !important;
+    white-space: nowrap;
 }
-.chip-btn > button:hover {
-    border-color: #2563EB !important;
-    color: #2563EB !important;
-    background-color: #EFF6FF !important;
-    transform: none;
+.chip-wrp div.stButton > button:hover {
+    background-color: #eff6ff !important;
+    color: #2563eb !important;
+    border-color: #2563eb !important;
+}
+
+/* Submit button inside form */
+div.stFormSubmitButton > button {
+    background-color: #111827 !important;
+    color: #ffffff !important;
+    border: 1.5px solid #111827 !important;
+    border-radius: 8px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-weight: 500 !important;
+    font-size: 0.875rem !important;
+    padding: 0.55rem 1.4rem !important;
+    width: auto !important;
+}
+div.stFormSubmitButton > button:hover {
+    background-color: #1f2937 !important;
+}
+
+/* Input */
+.stTextInput > div > div > input {
+    background-color: #ffffff !important;
+    border: 1.5px solid #d1d5db !important;
+    border-radius: 10px !important;
+    color: #111827 !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.925rem !important;
+    padding: 0.7rem 1rem !important;
     box-shadow: none !important;
 }
+.stTextInput > div > div > input:focus {
+    border-color: #2563eb !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1) !important;
+}
+.stTextInput > div > div > input::placeholder {
+    color: #9ca3af !important;
+}
+label[data-testid="stWidgetLabel"] {
+    display: none !important;
+}
 
-/* ========== RESULT CARD ========== */
-.result-wrapper {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E7EB;
-    border-radius: 12px;
+/* Result card */
+.result-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
     padding: 28px 32px;
-    margin-top: 20px;
-    color: #1F2937 !important;
-    line-height: 1.75;
-    font-size: 0.92rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.03);
+    line-height: 1.8;
+    color: #1f2937;
+    font-size: 0.9rem;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    margin-top: 8px;
 }
-.result-wrapper h1, .result-wrapper h2, .result-wrapper h3 {
-    color: #111827 !important;
+.result-card h1, .result-card h2, .result-card h3 {
+    color: #111827;
     font-weight: 600;
-    margin-top: 1.5em;
-}
-.result-wrapper p {
-    color: #374151 !important;
 }
 
-/* ========== SUCCESS / ERROR STATES ========== */
-.stSuccess, .stInfo {
-    background-color: #F0FDF4 !important;
-    color: #166534 !important;
-    border: 1px solid #BBF7D0 !important;
-    border-radius: 8px !important;
-}
-.stSpinner > div {
-    color: #2563EB !important;
+/* Divider */
+.hr { border: none; border-top: 1px solid #f3f4f6; margin: 20px 0; }
+
+/* Caption text */
+.caption-text {
+    font-size: 0.75rem;
+    color: #9ca3af;
+    margin-top: 10px;
 }
 
-/* ========== EXPANDER ========== */
-.streamlit-expanderHeader {
-    font-size: 0.8rem !important;
+/* Spinner */
+[data-testid="stSpinner"] { color: #2563eb !important; }
+
+/* Expander */
+[data-testid="stExpander"] summary {
+    font-size: 0.78rem !important;
+    color: #6b7280 !important;
     font-weight: 500 !important;
-    color: #6B7280 !important;
-    background-color: #FAFAFA !important;
 }
+
+/* Remove red Streamlit toolbar  */
+[data-testid="stToolbar"] { display: none; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -208,89 +171,103 @@ html, body, [data-testid="stAppViewContainer"], .main, .block-container {
 # SIDEBAR
 # ─────────────────────────────────────────────
 with st.sidebar:
-    st.markdown('<div class="sidebar-logo">✈️ AI Trip Planner</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-tagline">Agentic Itinerary System · v2.0</div>', unsafe_allow_html=True)
-    
+    st.markdown("### ✈️ AI Trip Planner")
+    st.caption("Agentic Itinerary System · v2.0")
     st.markdown("---")
 
-    st.markdown('<div class="sidebar-section-title">Developer</div>', unsafe_allow_html=True)
-    st.markdown("**Jatin**  \nFull-Stack AI Engineer")
+    st.markdown("**DEVELOPER**")
+    st.markdown("**Jatin** — Full-Stack AI Engineer")
     st.markdown("[GitHub ↗](https://github.com/jatindev1022)   [LinkedIn ↗](https://www.linkedin.com/in/jatin-dev)")
 
-    st.markdown('<div class="sidebar-section-title">Tech Stack</div>', unsafe_allow_html=True)
+    st.markdown("")
+    st.markdown("**TECH STACK**")
     st.markdown("""
-    <span class="tech-pill">FastAPI</span>
-    <span class="tech-pill">LangGraph</span>
-    <span class="tech-pill">Llama 3.1</span>
-    <span class="tech-pill">Groq</span>
-    <span class="tech-pill">Docker</span>
-    <span class="tech-pill">Render</span>
+    `FastAPI` &nbsp; `LangGraph` &nbsp; `Llama 3.1-70B`  
+    `Groq` &nbsp; `Docker` &nbsp; `Render` &nbsp; `Streamlit`
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="sidebar-section-title">How it works</div>', unsafe_allow_html=True)
-    with st.expander("View Details"):
+    st.markdown("")
+    with st.expander("How it works"):
         st.markdown("""
-        1. Query sent to **FastAPI** backend
-        2. **LangGraph** orchestrates tool calls
-        3. Agent fetches weather, places, costs
-        4. Generates comprehensive itinerary
+        1. Your query hits the **FastAPI** backend.
+        2. **LangGraph** coordinates tool calls.
+        3. Agent fetches real-time weather, places, and costs.
+        4. Returns a structured Markdown itinerary.
         """)
 
 
 # ─────────────────────────────────────────────
-# MAIN PAGE
+# MAIN CONTENT
 # ─────────────────────────────────────────────
-_, col, _ = st.columns([0.08, 1, 0.08])
 
-with col:
-    st.markdown('<div class="hero-badge">🤖 Powered by LangGraph + Groq</div>', unsafe_allow_html=True)
-    st.markdown('<h1 class="hero-title">Plan your next trip  <br>with AI.</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="hero-subtitle">Describe where you want to go. The agent will research weather,<br>attractions, costs, and build a complete itinerary for you.</p>', unsafe_allow_html=True)
+# Badge
+st.markdown("""
+<div style="display:inline-block; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;
+border-radius:100px; padding:4px 14px; font-size:0.75rem; font-weight:500; margin-bottom:16px;">
+🤖 Powered by LangGraph + Groq
+</div>
+""", unsafe_allow_html=True)
 
-    # Quick suggestions
-    st.markdown('<div class="suggestion-label">Quick suggestions</div>', unsafe_allow_html=True)
-    chip_cols = st.columns([1, 1, 1, 3])
-    
-    with chip_cols[0]:
-        st.markdown('<div class="chip-btn">', unsafe_allow_html=True)
-        if st.button("Paris"):
-            st.session_state["q"] = "Plan a 3-day romantic trip to Paris."
-        st.markdown('</div>', unsafe_allow_html=True)
-    with chip_cols[1]:
-        st.markdown('<div class="chip-btn">', unsafe_allow_html=True)
-        if st.button("Bali"):
-            st.session_state["q"] = "7-day relaxation trip in Bali, Indonesia."
-        st.markdown('</div>', unsafe_allow_html=True)
-    with chip_cols[2]:
-        st.markdown('<div class="chip-btn">', unsafe_allow_html=True)
-        if st.button("Tokyo"):
-            st.session_state["q"] = "5-day cultural food trip in Tokyo."
-        st.markdown('</div>', unsafe_allow_html=True)
+# Hero
+st.markdown("""
+<h1 style="font-size:2.25rem; font-weight:700; color:#111827; letter-spacing:-0.04em; line-height:1.2; margin:0 0 10px 0;">
+Plan your next trip<br>with AI.
+</h1>
+<p style="font-size:1rem; color:#6b7280; margin:0 0 24px 0; line-height:1.6;">
+Describe where you want to go. The agent will research weather,<br>
+places, and costs — then build a complete itinerary for you.
+</p>
+""", unsafe_allow_html=True)
 
-    # Input Form
-    with st.form(key="travel_form"):
-        user_input = st.text_input(
-            label="",
-            value=st.session_state.get("q", ""),
-            placeholder="e.g., A 5-day budget trip to Manali for two people..."
-        )
-        submit_button = st.form_submit_button(label="Generate Itinerary →")
+# Quick Suggestions
+st.markdown('<p style="font-size:0.72rem; font-weight:600; color:#9ca3af; letter-spacing:0.08em; text-transform:uppercase; margin-bottom:8px;">Quick Suggestions</p>', unsafe_allow_html=True)
 
-    # Result
-    if submit_button and user_input.strip():
-        try:
-            with st.spinner("Agent is researching your destination..."):
-                payload = {"question": user_input}
-                response = requests.post(f"{BASE_URL}/query", json=payload, timeout=180)
-            
-            if response.status_code == 200:
-                answer = response.json().get("answer", "No response returned.")
-                st.markdown(f'<div class="result-wrapper">{answer}</div>', unsafe_allow_html=True)
-                st.markdown("")
-                st.caption("✓ Plan generated by AI. Verify prices and availability before booking.")
-            else:
-                err = response.json().get("error", response.text)
-                st.error(f"Backend Error: {err}")
-        except Exception as e:
-            st.error(f"Could not connect to backend at `{BASE_URL}`.")
-            st.info("If using the free Render tier, wait 30–45 seconds for the server to wake up and try again.")
+chip_col1, chip_col2, chip_col3, _ = st.columns([1, 1, 1, 4])
+with chip_col1:
+    st.markdown('<div class="chip-wrp">', unsafe_allow_html=True)
+    if st.button("🗼 Paris"):
+        st.session_state["q"] = "Plan a 3-day romantic trip to Paris, France."
+    st.markdown('</div>', unsafe_allow_html=True)
+with chip_col2:
+    st.markdown('<div class="chip-wrp">', unsafe_allow_html=True)
+    if st.button("🌴 Bali"):
+        st.session_state["q"] = "Plan a relaxing 7-day trip to Bali, Indonesia."
+    st.markdown('</div>', unsafe_allow_html=True)
+with chip_col3:
+    st.markdown('<div class="chip-wrp">', unsafe_allow_html=True)
+    if st.button("🍜 Tokyo"):
+        st.session_state["q"] = "Plan a 5-day cultural food trip in Tokyo, Japan."
+    st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown("")
+
+# Input Form
+with st.form(key="trip_form"):
+    user_input = st.text_input(
+        label="destination",
+        value=st.session_state.get("q", ""),
+        placeholder="e.g., A 5-day budget-friendly trip to Manali for two people..."
+    )
+    _, btn_col = st.columns([3, 1])
+    with btn_col:
+        submitted = st.form_submit_button("Generate Itinerary →")
+
+# ─────────────────────────────────────────────
+# RESULT
+# ─────────────────────────────────────────────
+if submitted and user_input.strip():
+    try:
+        with st.spinner("Researching your destination..."):
+            res = requests.post(f"{BASE_URL}/query", json={"question": user_input}, timeout=180)
+
+        if res.status_code == 200:
+            answer = res.json().get("answer", "No itinerary returned.")
+            st.markdown(f'<div class="result-card">{answer}</div>', unsafe_allow_html=True)
+            st.markdown('<p class="caption-text">✓ Generated by AI · Verify details before booking.</p>', unsafe_allow_html=True)
+        else:
+            err = res.json().get("error", res.text)
+            st.error(f"Backend error: {err}")
+
+    except Exception as e:
+        st.error(f"Could not reach backend at `{BASE_URL}`.")
+        st.info("On the free Render tier, the server sleeps after inactivity. Please wait 30–45 seconds and try again.")
