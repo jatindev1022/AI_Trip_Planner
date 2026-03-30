@@ -1,43 +1,34 @@
 class Calculator:
     @staticmethod
-    def multiply(a: int, b: int) -> int:
+    def multiply(a, b) -> float:
         """
-        Multiply two integers.
-
-        Args:
-            a (int): The first integer.
-            b (int): The second integer.
-
-        Returns:
-            int: The product of a and b.
+        Multiply two numbers. Handles strings passed by LLMs.
         """
-        return a * b
+        try:
+            # Force conversion to float to prevent "sequence * float" error
+            return float(a) * float(b)
+        except (ValueError, TypeError):
+            return 0.0
     
     @staticmethod
-    def calculate_total(*x: float) -> float:
+    def calculate_total(*x) -> float:
         """
-        Calculate sum of the given list of numbers
-
-        Args:
-            x (list): List of floating numbers
-
-        Returns:
-            float: The sum of numbers in the list x
+        Calculate sum of the given numbers, ensuring all are floats.
         """
-        return sum(x)
+        try:
+            # Convert every item in the tuple to a float before summing
+            return sum(float(i) for i in x)
+        except (ValueError, TypeError):
+            return 0.0
     
     @staticmethod
-    def calculate_daily_budget(total: float, days: int) -> float:
+    def calculate_daily_budget(total, days) -> float:
         """
-        Calculate daily budget
-
-        Args:
-            total (float): Total cost.
-            days (int): Total number of days
-
-        Returns:
-            float: Expense for a single day
+        Calculate daily budget safely.
         """
-        return total / days if days > 0 else 0
-    
-    
+        try:
+            t = float(total)
+            d = float(days)
+            return t / d if d > 0 else 0.0
+        except (ValueError, TypeError):
+            return 0.0

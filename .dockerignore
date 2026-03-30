@@ -1,0 +1,14 @@
+.git
+.venv
+env
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.db
+.sqlite3
+.env
+.ipynb_checkpoints
+notebook/
+ai_trip_planner.egg-info/
+my_graph.png

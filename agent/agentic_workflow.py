@@ -7,26 +7,27 @@ from langgraph.prebuilt import ToolNode,tools_condition
 from tools.weather_info_tool import WeatherInfoTool
 from tools.place_search_tool import PlaceSearchTool
 from tools.expense_calculator_tool import CalculatorTool
-from tools.currency_conversion import CurrencyConvertorTool
+from tools.currency_conversion import CurrencyConverterTool
 
 
 
 class GraphBuilder():
     def __init__(self,model_provider='groq'):
         self.model_loader=ModelLoader(model_provider=model_provider)
-        self.llm=ModelLoader.load_llm()
+        loader = ModelLoader() # Create the instance first
+        self.llm = loader.load_llm()
         self.tools=[ ]
         
-        self.weather_tools= WeatherInfoTool(),
-        self.place_search_tools= PlaceSearchTool(),
-        self.calculate_tools=CalculatorTool(),
-        self.currency_convertor_tools=CurrencyConvertorTool()
+        self.weather_tools = WeatherInfoTool()             # Fixed
+        self.place_search_tools = PlaceSearchTool()         # Fixed
+        self.calculate_tools = CalculatorTool()             # Fixed
+        self.currency_convertor_tools = CurrencyConverterTool() # Fixed
         
         self.tools.extend([
-            * self.weather_tools.weather_tool_list,
-            * self.place_search_tools.place_search_tool_list, 
-            * self.calculate_tools.calculator_tool_list,
-            * self.currency_convertor_tools.currency_convertor_tool_list
+            *self.weather_tools.weather_tool_list,
+            *self.place_search_tools.place_search_tool_list, 
+            *self.calculate_tools.calculator_tool_list,
+            *self.currency_convertor_tools.currency_converter_tool_list
         ])
         
         self.llm_with_tools=self.llm.bind_tools(tools=self.tools)

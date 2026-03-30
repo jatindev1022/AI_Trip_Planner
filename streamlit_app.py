@@ -28,7 +28,7 @@ if submit_button and user_input.strip():
     try:
         with st.spinner("The AI is thinking..."):
             # Ensure the key "query" matches your FastAPI Pydantic model
-            payload = {"query": user_input} 
+            payload = {"question": user_input} 
             response = requests.post(f"{BASE_URL}/query", json=payload)
             
             if response.status_code == 200:
