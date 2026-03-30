@@ -19,8 +19,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-# Copy requirements first to leverage Docker cache
-COPY requirements.txt .
+# Copy requirements and project config first to leverage Docker cache
+COPY requirements.txt setup.py pyproject.toml* ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code
